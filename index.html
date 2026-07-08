@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Raíssa, uma pergunta para você 🦷💍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink-50:#FFF6FA;
+    --pink-100:#FFE3EE;
+    --pink-200:#FFC9DE;
+    --pink-400:#FF8FBB;
+    --pink-600:#FF5FA0;
+    --mint-300:#9DEBC9;
+    --mint-500:#4FD897;
+    --brown-700:#7A4B57;
+    --brown-900:#4A2E37;
+    --white:#FFFFFF;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+
+  html,body{
+    margin:0; padding:0; height:100%; width:100%;
+    overflow:hidden;
+    background:linear-gradient(160deg, var(--pink-50) 0%, var(--pink-100) 45%, var(--pink-200) 100%);
+    font-family:'Quicksand', sans-serif;
+    color:var(--brown-900);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  #app{
+    position:relative;
+    width:100%;
+    height:100%;
+    min-height:100dvh;
+  }
+
+  /* ---------- decorative floating background hearts (ambient, screen 1) ---------- */
+  .bg-decor{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+  }
+  .bg-decor span{
+    position:absolute;
+    bottom:-10%;
+    font-size:1.4rem;
+    opacity:.35;
+    animation:floatUp linear infinite;
+    color:var(--pink-400);
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) rotate(0deg); opacity:0;}
+    10%{opacity:.4;}
+    90%{opacity:.35;}
+    100%{ transform:translateY(-120vh) rotate(25deg); opacity:0;}
+  }
+
+  /* ---------- screens ---------- */
+  .screen{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:6vh 6vw;
+    transition:opacity .6s ease, transform .6s ease;
+    z-index:1;
+  }
+
+  .screen.hidden{
+    opacity:0;
+    transform:scale(.96);
+    pointer-events:none;
+  }
+
+  /* ---------- screen 1: proposal ---------- */
+  .eyebrow{
+    font-size:clamp(1rem, 2.6vw, 1.35rem);
+    font-weight:600;
+    color:var(--brown-700);
+    max-width:26ch;
+    margin:0 0 .6rem 0;
+    line-height:1.4;
+  }
+
+  .question{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:clamp(3.2rem, 12vw, 6.5rem);
+    color:var(--pink-600);
+    margin:0 0 2.4rem 0;
+    line-height:1;
+    text-shadow: 2px 2px 0 var(--white);
+  }
+
+  .tooth-emoji-row{
+    font-size:clamp(1.6rem, 5vw, 2.4rem);
+    margin-bottom:1.4rem;
+  }
+
+  .buttons-wrap{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    height:120px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1.2rem;
+  }
+
+  .btn{
+    border:none;
+    border-radius:999px;
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    box-shadow:0 8px 20px -6px rgba(122,75,87,.35);
+    transition:transform .15s ease, box-shadow .15s ease, font-size .25s ease, padding .25s ease, background .3s ease;
+    letter-spacing:.02em;
+  }
+
+  .btn:active{ transform:scale(.94); }
+
+  #btn-sim{
+    background:linear-gradient(135deg, var(--mint-300), var(--mint-500));
+    color:#0F5C3B;
+    padding:1rem 2.2rem;
+    font-size:1.15rem;
+  }
+
+  #btn-sim:hover{ transform:translateY(-2px) scale(1.03); }
+
+  #btn-nao{
+    background:var(--white);
+    color:var(--pink-600);
+    border:2px solid var(--pink-200);
+    padding:1rem 2rem;
+    font-size:1.05rem;
+    position:fixed;
+    z-index:20;
+    white-space:nowrap;
+  }
+
+  .hint{
+    margin-top:2.2rem;
+    font-size:.85rem;
+    color:var(--brown-700);
+    opacity:.65;
+    max-width:30ch;
+  }
+
+  /* ---------- screen 2: celebration ---------- */
+  #celebration{
+    background:radial-gradient(circle at 50% 30%, var(--pink-50) 0%, var(--pink-100) 55%, var(--pink-200) 100%);
+  }
+
+  .teeth-couple{
+    width:min(60vw, 260px);
+    height:auto;
+    animation:coupleBounce 2.4s ease-in-out infinite;
+    filter:drop-shadow(0 10px 18px rgba(122,75,87,.25));
+  }
+
+  @keyframes coupleBounce{
+    0%,100%{ transform:translateY(0) rotate(0deg);}
+    25%{ transform:translateY(-6px) rotate(-1.5deg);}
+    50%{ transform:translateY(0) rotate(0deg);}
+    75%{ transform:translateY(-4px) rotate(1.5deg);}
+  }
+
+  .final-msg{
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:clamp(2.2rem, 7vw, 3.4rem);
+    color:var(--pink-600);
+    margin-top:1.4rem;
+    text-shadow:2px 2px 0 var(--white);
+  }
+
+  .sub-msg{
+    font-size:clamp(.95rem, 2.4vw, 1.15rem);
+    color:var(--brown-700);
+    margin-top:.6rem;
+    font-weight:600;
+  }
+
+  .sound-toggle{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background:var(--white);
+    border:2px solid var(--pink-200);
+    border-radius:999px;
+    width:46px;
+    height:46px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.2rem;
+    cursor:pointer;
+    box-shadow:0 6px 14px -4px rgba(122,75,87,.3);
+    z-index:30;
+    transition:transform .15s ease;
+  }
+  .sound-toggle:active{ transform:scale(.9); }
+
+  /* ---------- confetti / hearts falling ---------- */
+  .fall-particle{
+    position:fixed;
+    top:-40px;
+    pointer-events:none;
+    z-index:15;
+    will-change:transform;
+    animation-name:fallDown;
+    animation-timing-function:linear;
+    animation-fill-mode:forwards;
+  }
+
+  @keyframes fallDown{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg); opacity:1;}
+    100%{ transform:translateY(105vh) translateX(var(--drift)) rotate(var(--spin)); opacity:.9;}
+  }
+
+  @media (max-width:420px){
+    .buttons-wrap{ height:100px; gap:.8rem; }
+    #btn-sim, #btn-nao{ padding:.85rem 1.5rem; font-size:1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="bg-decor" id="bgDecor"></div>
+
+  <!-- ===================== SCREEN 1 — PROPOSAL ===================== -->
+  <section class="screen" id="proposal">
+    <p class="eyebrow">Raíssa, tenho uma pergunta muito importante para você...</p>
+    <h1 class="question">Namora comigo?</h1>
+    <div class="tooth-emoji-row">🦷💕🦷</div>
+
+    <div class="buttons-wrap">
+      <button class="btn" id="btn-sim">SIM 💖</button>
+      <button class="btn" id="btn-nao">NÃO</button>
+    </div>
+
+    <p class="hint">(psiu... o botão "não" é meio arisco 😏)</p>
+  </section>
+
+  <!-- ===================== SCREEN 2 — CELEBRATION ===================== -->
+  <section class="screen hidden" id="celebration">
+    <button class="sound-toggle" id="soundToggle" title="Ativar/mutar música" aria-label="Ativar ou mutar música">🔇</button>
+
+    <svg class="teeth-couple" viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- ground shadow -->
+      <ellipse cx="150" cy="205" rx="80" ry="10" fill="#7A4B57" opacity="0.12"/>
+
+      <!-- little heart between them -->
+      <path d="M150 108 C146 100 134 100 132 110 C130 120 150 132 150 132 C150 132 170 120 168 110 C166 100 154 100 150 108 Z" fill="#FF5FA0"/>
+
+      <!-- BRIDE TOOTH (left) -->
+      <g>
+        <!-- roots -->
+        <path d="M100 170 Q95 195 88 198 Q84 199 85 190 Q86 178 92 170 Z" fill="#FFFFFF" stroke="#F3D9E4" stroke-width="2"/>
+        <path d="M118 172 Q120 197 127 199 Q131 199 129 190 Q127 178 122 171 Z" fill="#FFFFFF" stroke="#F3D9E4" stroke-width="2"/>
+        <!-- body -->
+        <path d="M70 100 C70 65 150 65 150 100 C150 140 138 175 110 175 C82 175 70 140 70 100 Z" fill="#FFFFFF" stroke="#F3D9E4" stroke-width="3"/>
+        <!-- veil -->
+        <path d="M78 70 Q110 40 142 70 Q140 95 110 92 Q80 95 78 70 Z" fill="#FFF0F6" stroke="#FFC9DE" stroke-width="2" opacity="0.9"/>
+        <circle cx="110" cy="55" r="5" fill="#FF8FBB"/>
+        <!-- blush -->
+        <circle cx="88" cy="118" r="7" fill="#FFC9DE" opacity="0.7"/>
+        <circle cx="128" cy="118" r="7" fill="#FFC9DE" opacity="0.7"/>
+        <!-- eyes -->
+        <circle cx="94" cy="105" r="4" fill="#4A2E37"/>
+        <circle cx="122" cy="105" r="4" fill="#4A2E37"/>
+        <!-- smile -->
+        <path d="M96 128 Q110 140 124 128" stroke="#4A2E37" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- bouquet -->
+        <circle cx="60" cy="150" r="6" fill="#FF8FBB"/>
+        <circle cx="68" cy="145" r="6" fill="#9DEBC9"/>
+        <circle cx="66" cy="158" r="6" fill="#FFD166"/>
+      </g>
+
+      <!-- GROOM TOOTH (right) -->
+      <g>
+        <!-- roots -->
+        <path d="M182 172 Q178 197 171 199 Q167 199 168 190 Q170 178 176 171 Z" fill="#FFFFFF" stroke="#F3D9E4" stroke-width="2"/>
+        <path d="M200 170 Q205 195 212 198 Q216 199 215 190 Q214 178 208 170 Z" fill="#FFFFFF" stroke="#F3D9E4" stroke-width="2"/>
+        <!-- body -->
+        <path d="M152 100 C152 65 232 65 232 100 C232 140 220 175 192 175 C164 175 152 140 152 100 Z" fill="#FFFFFF" stroke="#F3D9E4" stroke-width="3"/>
+        <!-- top hat -->
+        <rect x="176" y="48" width="32" height="26" rx="3" fill="#4A2E37"/>
+        <rect x="168" y="70" width="48" height="8" rx="2" fill="#4A2E37"/>
+        <rect x="176" y="60" width="32" height="6" fill="#FF5FA0"/>
+        <!-- blush -->
+        <circle cx="170" cy="118" r="7" fill="#FFC9DE" opacity="0.6"/>
+        <circle cx="210" cy="118" r="7" fill="#FFC9DE" opacity="0.6"/>
+        <!-- eyes -->
+        <circle cx="176" cy="105" r="4" fill="#4A2E37"/>
+        <circle cx="204" cy="105" r="4" fill="#4A2E37"/>
+        <!-- smile -->
+        <path d="M178 128 Q192 140 206 128" stroke="#4A2E37" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- bowtie -->
+        <path d="M182 150 L192 144 L192 156 Z" fill="#FF5FA0"/>
+        <path d="M202 150 L192 144 L192 156 Z" fill="#FF5FA0"/>
+        <circle cx="192" cy="150" r="3.5" fill="#FF8FBB"/>
+      </g>
+    </svg>
+
+    <p class="final-msg">mas é obvio que vc ia aceitar né❤️🦷</p>
+    <p class="sub-msg">agora é pra sempre! te amoo! 🥹</p>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     0. AMBIENT BACKGROUND HEARTS (screen 1)
+  ========================================================= */
+  const bgDecor = document.getElementById('bgDecor');
+  const heartChars = ['💗','💕','🤍','💓'];
+  function spawnBgHeart(){
+    const el = document.createElement('span');
+    el.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.fontSize = (1 + Math.random()*1.6) + 'rem';
+    const duration = 9 + Math.random()*8;
+    el.style.animationDuration = duration + 's';
+    bgDecor.appendChild(el);
+    setTimeout(()=> el.remove(), duration*1000 + 200);
+  }
+  const bgInterval = setInterval(spawnBgHeart, 900);
+  for(let i=0;i<5;i++) setTimeout(spawnBgHeart, i*300);
+
+  /* =========================================================
+     1. THE "NÃO" BUTTON THAT RUNS AWAY
+  ========================================================= */
+  const btnNao = document.getElementById('btn-nao');
+  const btnSim = document.getElementById('btn-sim');
+  const proposalScreen = document.getElementById('proposal');
+
+  const naoPhrases = [
+    'NÃO',
+    'Tem certeza?',
+    'Pensa bem...',
+    'Hmmm, não creio',
+    'Quase!',
+    'Só clica no SIM 😅',
+    'Vacilou',
+    'Essa não vai rolar',
+    'Desiste, kkkj',
+    'O SIM tá logo ali 👉'
+  ];
+  let dodgeCount = 0;
+  let simScale = 1;
+  const MAX_SIM_SCALE = 1.9;
+
+  // ensure initial fixed position matches current layout on first paint
+  function placeInitialNao(){
+    const rect = btnNao.getBoundingClientRect();
+    btnNao.style.left = rect.left + 'px';
+    btnNao.style.top = rect.top + 'px';
+  }
+
+  function runAway(){
+    const btnW = btnNao.offsetWidth;
+    const btnH = btnNao.offsetHeight;
+    const margin = 16;
+    const maxX = Math.max(margin, window.innerWidth - btnW - margin);
+    const maxY = Math.max(margin, window.innerHeight - btnH - margin);
+
+    const newX = margin + Math.random() * (maxX - margin);
+    const newY = margin + Math.random() * (maxY - margin);
+
+    btnNao.style.left = newX + 'px';
+    btnNao.style.top = newY + 'px';
+
+    dodgeCount++;
+    btnNao.textContent = naoPhrases[dodgeCount % naoPhrases.length];
+
+    // make the SIM button grow a little each time, playful escalation
+    simScale = Math.min(MAX_SIM_SCALE, 1 + dodgeCount * 0.08);
+    btnSim.style.transform = 'scale(' + simScale + ')';
+  }
+
+  ['mouseenter','touchstart','pointerdown','focus'].forEach(evt=>{
+    btnNao.addEventListener(evt, function(e){
+      e.preventDefault();
+      runAway();
+    }, {passive:false});
+  });
+
+  // safety net: if somehow clicked, still dodge instead of doing anything
+  btnNao.addEventListener('click', function(e){
+    e.preventDefault();
+    runAway();
+  });
+
+  window.addEventListener('resize', ()=>{
+    // keep it inside bounds if window is resized
+    const rect = btnNao.getBoundingClientRect();
+    const maxX = window.innerWidth - rect.width - 16;
+    const maxY = window.innerHeight - rect.height - 16;
+    if(rect.left > maxX) btnNao.style.left = Math.max(16,maxX) + 'px';
+    if(rect.top > maxY) btnNao.style.top = Math.max(16,maxY) + 'px';
+  });
+
+  window.addEventListener('load', placeInitialNao);
+  placeInitialNao();
+
+  /* =========================================================
+     2. TINY PROCEDURAL "MUSIC" (Web Audio API — no external files)
+  ========================================================= */
+  let audioCtx = null;
+  let musicPlaying = false;
+  let musicMuted = true;
+  let musicTimer = null;
+
+  // a cute little looping melody, in Hz, with rests as 0
+  const melody = [523.25,0,659.25,0,783.99,659.25,0,523.25,0,0,
+                   587.33,0,698.46,0,880.00,698.46,0,587.33,0,0];
+  let noteIndex = 0;
+
+  function ensureAudioCtx(){
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(AC) audioCtx = new AC();
+    }
+    return audioCtx;
+  }
+
+  function playNote(freq, when, gainNode, ctx){
+    if(!freq) return;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    const noteGain = ctx.createGain();
+    noteGain.gain.setValueAtTime(0.0001, when);
+    noteGain.gain.linearRampToValueAtTime(0.22, when + 0.02);
+    noteGain.gain.exponentialRampToValueAtTime(0.0001, when + 0.22);
+    osc.connect(noteGain).connect(gainNode);
+    osc.start(when);
+    osc.stop(when + 0.24);
+  }
+
+  let masterGain = null;
+
+  function startMusicLoop(){
+    const ctx = ensureAudioCtx();
+    if(!ctx) return;
+    if(!masterGain){
+      masterGain = ctx.createGain();
+      masterGain.gain.value = musicMuted ? 0 : 0.5;
+      masterGain.connect(ctx.destination);
+    }
+    if(musicPlaying) return;
+    musicPlaying = true;
+
+    const stepTime = 0.22;
+    function scheduleStep(){
+      if(!musicPlaying) return;
+      const now = ctx.currentTime;
+      playNote(melody[noteIndex % melody.length], now, masterGain, ctx);
+      noteIndex++;
+      musicTimer = setTimeout(scheduleStep, stepTime*1000);
+    }
+    scheduleStep();
+  }
+
+  function setMuted(muted){
+    musicMuted = muted;
+    if(masterGain){
+      masterGain.gain.setTargetAtTime(muted ? 0 : 0.5, audioCtx.currentTime, 0.05);
+    }
+    soundToggle.textContent = muted ? '🔇' : '🔊';
+  }
+
+  const soundToggle = document.getElementById('soundToggle');
+  soundToggle.addEventListener('click', function(){
+    if(!audioCtx){ startMusicLoop(); }
+    if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    setMuted(!musicMuted);
+  });
+
+  /* =========================================================
+     3. FALLING CONFETTI + HEARTS
+  ========================================================= */
+  const fallEmojis = ['❤️','💕','🎉','🎊','💗','🦷','✨'];
+  const fallColors = ['#FF8FBB','#FF5FA0','#9DEBC9','#FFD166','#B892FF'];
+
+  let confettiInterval = null;
+
+  function spawnFallParticle(){
+    const el = document.createElement('div');
+    el.className = 'fall-particle';
+    const useEmoji = Math.random() > 0.4;
+
+    if(useEmoji){
+      el.textContent = fallEmojis[Math.floor(Math.random()*fallEmojis.length)];
+      el.style.fontSize = (1 + Math.random()*1.4) + 'rem';
+    } else {
+      el.style.width = (7 + Math.random()*6) + 'px';
+      el.style.height = el.style.width;
+      el.style.background = fallColors[Math.floor(Math.random()*fallColors.length)];
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+    }
+
+    const startX = Math.random()*100;
+    el.style.left = startX + 'vw';
+    const duration = 3.5 + Math.random()*3;
+    const drift = (Math.random()*140 - 70) + 'px';
+    const spin = (Math.random()*720 - 360) + 'deg';
+    el.style.setProperty('--drift', drift);
+    el.style.setProperty('--spin', spin);
+    el.style.animationDuration = duration + 's';
+
+    document.body.appendChild(el);
+    setTimeout(()=> el.remove(), duration*1000 + 200);
+  }
+
+  function startConfetti(){
+    if(confettiInterval) return;
+    // initial burst
+    for(let i=0;i<28;i++){ setTimeout(spawnFallParticle, i*40); }
+    confettiInterval = setInterval(spawnFallParticle, 220);
+  }
+
+  /* =========================================================
+     4. THE "SIM" MOMENT — TRANSITION TO CELEBRATION
+  ========================================================= */
+  const celebrationScreen = document.getElementById('celebration');
+
+  btnSim.addEventListener('click', function(){
+    // stop ambient hearts from screen 1
+    clearInterval(bgInterval);
+
+    proposalScreen.classList.add('hidden');
+    celebrationScreen.classList.remove('hidden');
+
+    startConfetti();
+
+    // try to start music right on this user gesture (autoplay-safe)
+    startMusicLoop();
+    if(audioCtx && audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    setMuted(false); // unmute automatically since this IS a user click/gesture
+  });
+
+})();
+</script>
+
+</body>
+</html>
